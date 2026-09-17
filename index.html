@@ -127,6 +127,9 @@ td.vin{font-family:var(--mono);font-size:12.5px;letter-spacing:.01em}
 .tag.ok{background:var(--ok-bg);color:var(--ok)}
 .tag.warn{background:var(--signal-bg);color:var(--signal)}
 .tag.late{background:var(--stop-bg);color:var(--stop)}
+.tag.new{background:var(--ink);color:#fff;cursor:help}
+.callout{background:#FBFBFC;border:1px solid var(--line);border-left:2px solid var(--ink);color:var(--ink-2);font-size:12.5px;line-height:1.55;padding:10px 14px;margin:10px 0}
+.callout b{color:var(--ink)}
 .count{margin-left:auto;font-size:12px;color:var(--ink-3);font-weight:400;font-family:var(--mono)}
 .ftr{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--line);background:#FCFCFD;flex-wrap:wrap}
 .hint{font-size:12px;color:var(--ink-3);align-self:center}
@@ -460,13 +463,24 @@ h2{max-width:30ch}
       <h3>Destino</h3>
       <div class="body">
         <div class="field" style="margin-bottom:12px"><label>Concesionario</label>
-          <select><option>1042 — Simpa Vicente López</option><option>1051 — Autonorte Rosario</option><option>1063 — Del Plata Mar del Plata</option></select></div>
+          <select onchange="toast('Grupo BP y grupo de cliente recuperados del interlocutor comercial')"><option>1042 — Simpa Vicente López</option><option>1051 — Autonorte Rosario</option><option>1063 — Del Plata Mar del Plata</option></select></div>
+        <div class="field" style="margin-bottom:12px"><label>Agrupación de BP — sector 40 <span class="tag">Automático</span> <span class="tag new" title="Regla argentina que amplía la EF original — se documenta como adenda">ADENDA AR</span></label>
+          <input class="readonly" readonly value="Z040 — Red de concesionarios"></div>
+        <div class="field" style="margin-bottom:12px"><label>Grupo de cliente <span class="tag ok">Propuesto</span> <span class="tag new" title="Regla argentina que amplía la EF original — se documenta como adenda">ADENDA AR</span></label>
+          <select id="grpCli">
+            <option value="T">T — venta tradicional / unitaria</option>
+            <option value="F">F — venta de flota</option>
+            <option value="E">E — venta propia · demos · activo fijo</option>
+          </select></div>
+        <div class="note"><b>Los dos salen de tablas, no se tipean.</b> La agrupación se lee de la tabla de interlocutores comerciales filtrando el sector 40, y el grupo de cliente viene del maestro del cliente y se propone acá. La letra T, F o E acompaña a la unidad desde la asignación y es la que después viaja en el campo VVMC de las interfaces de facturación y venta — el usuario la puede corregir en este paso, no más adelante.</div>
         <div class="field" style="margin-bottom:8px"><label>Fecha de asignación</label><input type="date" value="2026-09-15"></div>
         <div class="note">La fecha viene propuesta con la del sistema y se puede cambiar <span class="ref">A3.6</span>.</div>
         
       </div>
     </div>
   </div>
+
+  <div class="callout" style="max-width:860px"><b>ADENDA AR</b> — Los elementos marcados así son reglas de la operación argentina que amplían la especificación original: agrupación de BP del sector 40 y grupo de cliente T/F/E en la asignación, condición fiscal en la facturación, tipo de venta tomado de SD y el circuito de factura financiera. Se documentan como adenda a la EF.</div>
 </section>
 
 <!-- ===================== FACTURACIÓN ===================== -->
@@ -479,26 +493,30 @@ h2{max-width:30ch}
   <div class="panel">
     <h3>Documentos pendientes de informar <span class="count">23 documentos · 37 unidades</span></h3>
     <div class="scroll"><table>
-      <thead><tr><th><input type="checkbox" aria-label="Todos"></th><th>Documento</th><th>Fecha</th><th>Cliente</th><th>VIN</th><th>Importe</th><th>Interfaz</th><th>Política de venta</th><th>Tipo</th></tr></thead>
+      <thead><tr><th><input type="checkbox" aria-label="Todos"></th><th>Documento</th><th>Fecha</th><th>Cliente</th><th>Cond. fiscal <span class="tag new" title="Regla argentina que amplía la EF original — se documenta como adenda">ADENDA AR</span></th><th>VIN</th><th>Importe</th><th>Layout</th><th>Política de venta</th><th>Tipo</th></tr></thead>
       <tbody>
-        <tr class="sel"><td><input type="checkbox" checked></td><td>9100004871</td><td>12/09/2026</td><td>1042 — Simpa Vicente López</td><td class="vin">3E6CL31A1ZK996943</td><td>$ 38.420.000</td><td><span class="tag">026</span></td>
+        <tr class="sel"><td><input type="checkbox" checked></td><td>9100004871</td><td>12/09/2026</td><td>1042 — Simpa Vicente López</td><td><span class="tag">RI</span></td><td class="vin">3E6CL31A1ZK996943</td><td>$ 38.420.000</td><td><span class="tag">026</span></td>
           <td><select style="min-width:150px"><option>CDC — crédito NSC a cliente</option><option>CASH — contado</option></select></td>
           <td><select style="min-width:96px"><option>T — menudeo</option><option>F — flotilla</option></select></td></tr>
-        <tr class="sel"><td><input type="checkbox" checked></td><td>9100004872</td><td>12/09/2026</td><td>1042 — Simpa Vicente López</td><td class="vin">3E6CL31A1ZK996944</td><td>$ 38.420.000</td><td><span class="tag">026</span></td>
+        <tr class="sel"><td><input type="checkbox" checked></td><td>9100004872</td><td>12/09/2026</td><td>1042 — Simpa Vicente López</td><td><span class="tag">RI</span></td><td class="vin">3E6CL31A1ZK996944</td><td>$ 38.420.000</td><td><span class="tag">026</span></td>
           <td><select style="min-width:150px"><option>CDC — crédito NSC a cliente</option></select></td>
           <td><select style="min-width:96px"><option>T — menudeo</option></select></td></tr>
-        <tr><td><input type="checkbox"></td><td>9100004880</td><td>13/09/2026</td><td>Aguirre, Marcela (venta directa)</td><td class="vin">3E6CL31A1ZK996951</td><td>$ 41.900.000</td><td><span class="tag warn">040</span></td>
+        <tr><td><input type="checkbox"></td><td>9100004880</td><td>13/09/2026</td><td>Aguirre, Marcela (venta directa)</td><td><span class="tag warn">CF</span></td><td class="vin">3E6CL31A1ZK996951</td><td>$ 41.900.000</td><td><span class="tag warn">040</span></td>
           <td><select style="min-width:150px"><option>CASH — contado cliente</option></select></td>
           <td><select style="min-width:96px"><option>T — menudeo</option></select></td></tr>
-        <tr><td><input type="checkbox"></td><td>9100004881</td><td>13/09/2026</td><td>Transportes del Sur S.A. (directa)</td><td class="vin">3E6CL31A1ZK996952</td><td>$ 41.900.000</td><td><span class="tag warn">041</span></td>
+        <tr><td><input type="checkbox"></td><td>9100004881</td><td>13/09/2026</td><td>Transportes del Sur S.A. (directa)</td><td><span class="tag">RI</span></td><td class="vin">3E6CL31A1ZK996952</td><td>$ 41.900.000</td><td><span class="tag warn">041</span></td>
           <td><select style="min-width:150px"><option>ARR — arrendamiento</option></select></td>
           <td><select style="min-width:96px"><option>F — flotilla</option></select></td></tr>
       </tbody></table></div>
     <div class="ftr"><button class="btn" onclick="toast('2 documentos confirmados. Unidades en estado E60 — Facturado')">Confirmar 2 documentos</button>
       <span class="hint">La interfaz se decide sola por el tipo de documento y de cliente.</span></div>
-    <div class="body" style="padding-top:0"><div class="note"><b>En la venta directa este perfil carga además todo el bloque del comprador</b> —el mismo de diecinueve o trece campos que completa el concesionario en la 27 y la 28— porque no hay concesionario que lo haga <span class="ref">A4.2 · A5.5</span>. La 40 y la 41 no son la 27 y la 28 con otro origen: cambian los nombres de campo y las longitudes de los decimales, así que son dos mapeos completos.</div>
+    <div class="body" style="padding-top:0"><div class="note"><b>Venta directa financiada: mismo tratamiento que en el concesionario.</b> Si la factura de la venta directa sale a nombre de una financiera, el registro igual se emite como <span class="ref">040</span> o <span class="ref">041</span> según el tipo de persona del usuario final, y este perfil carga a mano todos los datos de ese usuario. La condición fiscal que define el armado es la del destinatario de la factura; el comprador informado a NIBU es siempre la persona real.</div>
+      <div class="note"><b>En la venta directa este perfil carga además todo el bloque del comprador</b> —el mismo de diecinueve o trece campos que completa el concesionario en la 27 y la 28— porque no hay concesionario que lo haga <span class="ref">A4.2 · A5.5</span>. La 40 y la 41 no son la 27 y la 28 con otro origen: cambian los nombres de campo y las longitudes de los decimales, así que son dos mapeos completos.</div>
+      <div class="note"><b>La condición fiscal del cliente decide el layout.</b> Se lee del maestro —responsable inscripto, consumidor final, monotributista, exento— y determina qué formato de comprobante corresponde y cómo se arma el registro que sale para NIBU: con RI el documento discrimina el impuesto y los campos de importe e impuesto viajan separados; sin RI el impuesto va incluido y el motor lo desglosa desde el documento de SD antes de escribir el archivo. El usuario no la elige: si está mal, se corrige en el maestro del cliente.</div>
       <div class="note">Tres interfaces salen de esta misma pantalla: <span class="ref">026</span> cuando Simpa factura al concesionario, <span class="ref">040</span> y <span class="ref">041</span> cuando factura directo al cliente final, física o jurídica. La venta directa excluye el camino del concesionario <span class="ref">§8.1</span>. En la venta directa este perfil carga además los datos del comprador.</div></div>
   </div>
+
+  <div class="callout" style="max-width:860px"><b>ADENDA AR</b> — Los elementos marcados así son reglas de la operación argentina que amplían la especificación original: agrupación de BP del sector 40 y grupo de cliente T/F/E en la asignación, condición fiscal en la facturación, tipo de venta tomado de SD y el circuito de factura financiera. Se documentan como adenda a la EF.</div>
 </section>
 
 <!-- ===================== PATENTAMIENTO ===================== -->
@@ -578,19 +596,25 @@ h2{max-width:30ch}
           <div class="field"><label>Tipo de cambio <span class="tag ok">Propuesto</span></label><input value="1.420,00"></div>
           <div class="field"><label>Fecha del tipo de cambio <span class="tag ok">Propuesto</span></label><input type="date" value="2026-09-14"></div>
           <div class="field"><label>Política de venta <span class="tag warn">Carga</span></label><select><option>CASH — contado cliente</option><option>CBC — crédito cliente</option><option>ARR — arrendamiento</option><option>AFJ — activo fijo</option></select></div>
-          <div class="field"><label>Tipo de venta <span class="tag warn">Carga</span></label><select><option>T — menudeo</option><option>F — flotilla</option><option>E — especial</option></select></div>
+          <div class="field"><label>Tipo de venta <span class="tag">Automático · de SD</span> <span class="tag new" title="Regla argentina que amplía la EF original — se documenta como adenda">ADENDA AR</span></label><input class="readonly" readonly value="T — tradicional / unitaria"></div>
           <div class="field"><label>Plazo de venta <span class="tag warn">Carga</span></label><input placeholder="0"></div>
         </div>
+        <div class="note"><b>El tipo de venta no se elige acá: viene del documento de SD.</b> Es la letra del grupo de cliente que quedó fijada en la asignación — T tradicional, F flota, E propia — y el sistema la recupera del documento para completar el campo VVMC del archivo. Si está mal, se corrige en la asignación o en el maestro, nunca tipeando otra letra en la venta.</div>
         <div class="note">El importe en dólares y el impuesto en dólares los carga el concesionario: no los deriva el sistema del tipo de cambio. El tipo de cambio sí viene propuesto con la cotización de la fecha de la factura, y se puede corregir. Cuando no hay accesorios se informa cero, nunca vacío <span class="ref">A5.5</span>.</div>
       </fieldset>
 
       <fieldset><legend>Comprador</legend>
         <div class="bar" style="margin-bottom:10px">
+          <div class="field"><label>Destinatario de la factura <span class="tag new" title="Regla argentina que amplía la EF original — se documenta como adenda">ADENDA AR</span></label><select id="finSel" onchange="finChg()">
+            <option value="c">Cliente final</option>
+            <option value="f">Entidad financiera — factura financiera</option></select></div>
+          <div class="field" id="finRz" style="display:none"><label>Financiera</label><select><option>BANCO SANTANDER RIO S.A.</option><option>NISSAN FINANCIAL SERVICES</option><option>HSBC BANK ARGENTINA</option></select></div>
           <div class="field"><label>Tipo de persona</label><select id="tp" onchange="tipoPersona()"><option value="f">Persona física</option><option value="j">Persona jurídica</option></select></div>
           <div class="field"><label id="docLab">DNI o CUIL <span class="tag warn">Carga</span></label><input placeholder="27-30123456-4"></div>
           <div class="field"><button class="btn ghost" onclick="toast('El comprador ya existe como interlocutor comercial: el bloque se precarga')">Buscar</button></div>
         </div>
         <div class="note" id="tpNote"></div>
+        <div class="callout" id="finNote" style="display:none"><b>Factura financiera: la factura sale a nombre de la entidad, pero a NIBU viaja el comprador real.</b> El registro que se genera es el mismo de siempre — interfaz <span class="ref">027</span> o <span class="ref">028</span> según el tipo de persona del usuario final — porque el layout de Nissan no tiene ningún campo para la financiera: los diecinueve campos del comprador llevan a la persona que usa el vehículo. Por eso, cuando el destinatario es una financiera, el bloque se abre entero para carga manual: ese usuario final no figura en la factura ni existe como interlocutor comercial. La entidad queda registrada sólo del lado de Simpa, asociada al documento.</div>
         <div class="cols3" id="blqF">
           <div class="field"><label>Nombre <span class="tag warn">Carga</span></label><input></div>
           <div class="field"><label>Apellido <span class="tag warn">Carga</span></label><input></div>
@@ -639,6 +663,8 @@ h2{max-width:30ch}
       <button class="btn ghost">Guardar como borrador</button>
       <span class="hint">Meta de la EF: menos de dos minutos por unidad.</span></div>
   </div>
+
+  <div class="callout" style="max-width:860px"><b>ADENDA AR</b> — Los elementos marcados así son reglas de la operación argentina que amplían la especificación original: agrupación de BP del sector 40 y grupo de cliente T/F/E en la asignación, condición fiscal en la facturación, tipo de venta tomado de SD y el circuito de factura financiera. Se documentan como adenda a la EF.</div>
 </section>
 
 <!-- ===================== CONTROL Y ENVÍO ===================== -->
@@ -943,6 +969,15 @@ function aplicar(){
   document.querySelectorAll('#tb .rw').forEach(r=>r.checked=false);
   document.getElementById('all').checked=false;cnt();
 }
+function finChg(){
+  const f=finSel.value==='f';
+  document.getElementById('finRz').style.display=f?'flex':'none';
+  document.getElementById('finNote').style.display=f?'block':'none';
+  document.querySelectorAll('#blqF input.readonly, #blqJ input.readonly').forEach(i=>{
+    i.readOnly=!f; i.classList.toggle('readonly',!f);
+  });
+  if(f) toast('Carga manual habilitada: todos los datos del usuario final se tipean');
+}
 function tipoPersona(){
   const j=tp.value==='j';
   docLab.innerHTML=(j?'CUIT':'DNI o CUIL')+' <span class="tag warn">Carga</span>';
@@ -1015,7 +1050,7 @@ const LAY={
       [13,"VPOLITICA_VENTA_MAYOREO","string",4,142,145," CDC","Catálogo · propuesto al usuario"],
       [14,"VVMC","string",1,146,146,"T","Catálogo de tipo de venta · propuesto"]]},
  "27":{f:"NIDS.Layout.FacUniDealCliNat.txt",len:564,fmt:"Texto de posición fija",ev:"Venta a cliente persona física",n:29,
-   note:'Treinta y cinco campos y 564 posiciones: es el registro más largo del circuito. Los dieciséis primeros son la operación comercial; del diecisiete al treinta y cinco, el comprador. Mirá el relleno: <b>todos los campos de texto se alinean a la derecha</b>, también los nombres y apellidos. Así vienen construidos los registros de ejemplo que entregó Nissan, y el criterio de aceptación es reproducirlos exactos.',
+   note:'Treinta y cinco campos y 564 posiciones: es el registro más largo del circuito. Los dieciséis primeros son la operación comercial; del diecisiete al treinta y cinco, el comprador. Mirá el relleno: <b>todos los campos de texto se alinean a la derecha</b>, también los nombres y apellidos. Así vienen construidos los registros de ejemplo que entregó Nissan, y el criterio de aceptación es reproducirlos exactos. En una venta financiada, los campos 17 a 35 llevan al usuario final cargado a mano — el layout no tiene lugar para la financiera.',
    c:[
       [1,"NID_INTERFACE","int",3,1,3,"027","Constante del motor"],
       [2,"VIN","stringrequerido",17,4,20,"3E6CL31A1ZK996943","Unidad · lectura"],
